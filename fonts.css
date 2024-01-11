@@ -1,0 +1,8 @@
+
+.markdown-body p, ul, ol, a, blockquote, table{
+    font-family: "Dejavu Math Tex Gyre", sans-serif;
+}
+
+.markdown-body code, pre{
+    font-family: "Fira Code", Consolas, monospace;
+}
