@@ -12,4 +12,6 @@
 
 .markdown-body code, pre{
     font-family: "JetBrainsMono", Consolas, monospace;
+    font-weight: normal;
+    font-style: normal;
 }
