@@ -1,0 +1,719 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/logo.jpg">
+  <link rel="icon" href="/logo.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="habaneraa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Kotlin 是一门与 Java 兼容、可在 JVM 上运行的编程语言，虽然 Kotlin 整体风格是类似与 Java 的面向对象，但它对函数式编程有非常好的支持。本文分享一些与函数式编程相关的 Kotlin 基础知识。大部分内容均来自 Kotlin 官方文档。 Lambda 表达式与匿名函数在 Kotlin 中， lambda 表达式的语法非常简洁，我们可以省略很多冗余信息。 以下是一个基本示例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识 Kotlin 函数式编程">
+<meta property="og:url" content="https://habaneraa.github.io/2024/03/24/intro%20to%20kotlin%20functional%20programming/index.html">
+<meta property="og:site_name" content="博客">
+<meta property="og:description" content="Kotlin 是一门与 Java 兼容、可在 JVM 上运行的编程语言，虽然 Kotlin 整体风格是类似与 Java 的面向对象，但它对函数式编程有非常好的支持。本文分享一些与函数式编程相关的 Kotlin 基础知识。大部分内容均来自 Kotlin 官方文档。 Lambda 表达式与匿名函数在 Kotlin 中， lambda 表达式的语法非常简洁，我们可以省略很多冗余信息。 以下是一个基本示例">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-24T06:51:20.000Z">
+<meta property="article:modified_time" content="2024-03-24T06:51:20.000Z">
+<meta property="article:author" content="habaneraa">
+<meta property="article:tag" content="kotlin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>初识 Kotlin 函数式编程 - 博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/fonts.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"habaneraa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 45vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/blue_umbrella.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">初识 Kotlin 函数式编程</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-24 14:51" pubdate>
+          2024年3月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">初识 Kotlin 函数式编程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Kotlin 是一门与 Java 兼容、可在 JVM 上运行的编程语言，虽然 Kotlin 整体风格是类似与 Java 的面向对象，但它对函数式编程有非常好的支持。本文分享一些与函数式编程相关的 Kotlin 基础知识。大部分内容均来自 Kotlin 官方文档。</p>
+<h3 id="Lambda-表达式与匿名函数"><a href="#Lambda-表达式与匿名函数" class="headerlink" title="Lambda 表达式与匿名函数"></a>Lambda 表达式与匿名函数</h3><p>在 Kotlin 中， lambda 表达式的语法非常简洁，我们可以省略很多冗余信息。</p>
+<p>以下是一个基本示例，该 lambda 表达式接受两个参数并返回二者的和。在这行代码中，<code>sum</code> 的类型注解是不必要的，Kotlin 能够推断出 lambda 表达式的返回类型是 <code>Int</code>。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> sum: (<span class="hljs-built_in">Int</span>, <span class="hljs-built_in">Int</span>) -&gt; <span class="hljs-built_in">Int</span> = &#123; x: <span class="hljs-built_in">Int</span>, y: <span class="hljs-built_in">Int</span> -&gt; x + y &#125;<br><span class="hljs-comment">// val sum = &#123;x: Int, y: Int -&gt; x + y&#125; 同样正确</span><br><span class="hljs-comment">// println(sum(1, 2)) // 3</span><br></code></pre></td></tr></table></figure>
+
+<p>Lmabda 表达式常常用作参数，传递给高阶函数使用。当一个 lambda 表达式作为函数实参时，可以省略括号，将花括号写在外面。例如，我们可以使用 <code>any()</code> 来判断一组整数里是否包含偶数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">containsEven</span><span class="hljs-params">(collection: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">Int</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> =  <br>        collection.any &#123; num: <span class="hljs-built_in">Int</span> -&gt; (num % <span class="hljs-number">2</span>) == <span class="hljs-number">0</span> &#125;<br></code></pre></td></tr></table></figure>
+
+<p>若 lambda 表达式<strong>仅有一个参数</strong>，那么前面的 <code>-&gt;</code> 可以省略，并且 <code>it</code> 将指代那个参数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">containsEven</span><span class="hljs-params">(collection: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">Int</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> =  <br>        collection.any &#123; (it % <span class="hljs-number">2</span>) == <span class="hljs-number">0</span> &#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>匿名函数</strong>与 lambda 表达式类似，都用来定义 function literals。二者的主要区别在于匿名函数能够显式地指定返回类型，而 lambda 表达式则不能。lambda 表达式的返回类型只能依靠编译器推断。下面这个例子仍然是 <code>containsEven()</code> 函数，使用了匿名函数语法，不过这里的 <code>Boolean</code> 注解仍然是可以省略的。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">containsEven</span><span class="hljs-params">(collection: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">Int</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>    <span class="hljs-keyword">val</span> isEven = <span class="hljs-function"><span class="hljs-title">fun</span><span class="hljs-params">(num: <span class="hljs-type">Int</span>)</span></span>: <span class="hljs-built_in">Boolean</span> = (num % <span class="hljs-number">2</span>) == <span class="hljs-number">0</span><br>    <span class="hljs-keyword">return</span> collection.any(isEven)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="函数作用域"><a href="#函数作用域" class="headerlink" title="函数作用域"></a>函数作用域</h3><p>许多传统 OOP 语言要求函数必须在类内定义，而 Kotlin 则支持多种函数定义，包括：</p>
+<ul>
+<li>Top level function: 直接在文件定义，不依附于类</li>
+<li>Local function: 在函数内定义</li>
+<li>Member function: 在类或匿名类中定义</li>
+<li>Extension function &amp; function with receiver: 在类外定义的函数，可以像使用成员函数一样调用</li>
+</ul>
+<p>Local function 就是函数里的函数。这样的函数能够访问外层函数的所有局部变量。如果将该函数作为返回值，那么将形成闭包 (closure)。这一特性也适用于 lambda 表达式和匿名函数。以下是一个简单的例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> ints = listOf(<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, -<span class="hljs-number">1</span>)<br>	<span class="hljs-keyword">var</span> sum = <span class="hljs-number">0</span><br>	ints.filter &#123; it &gt; <span class="hljs-number">0</span> &#125;.forEach &#123; sum += it &#125;<br>	print(sum) <span class="hljs-comment">// 5</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对列表里所有正数求和。这里的 lambda 表达式 <code>&#123; sum += it &#125;</code> 作为参数传给了 <code>forEach</code> 方法，它能够访问外部函数 <code>foo()</code> 的 local variable，得到正确的正数和。</p>
+<p>另一个更复杂的例子来自 Kotlin 官方文档：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">dfs</span><span class="hljs-params">(graph: <span class="hljs-type">Graph</span>)</span></span> &#123; <br>	<span class="hljs-keyword">val</span> visited = HashSet&lt;Vertex&gt;() <br>	<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">dfs</span><span class="hljs-params">(current: <span class="hljs-type">Vertex</span>)</span></span> &#123; <br>		<span class="hljs-keyword">if</span> (!visited.add(current)) <span class="hljs-keyword">return</span> <br>		<span class="hljs-keyword">for</span> (v <span class="hljs-keyword">in</span> current.neighbors)<br>			dfs(v) <br>	&#125; <br>	dfs(graph.vertices[<span class="hljs-number">0</span>]) <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里，内部的 <code>dfs()</code> 是一个递归函数，能够访问外部函数的参数 <code>graph</code>，并且可以对集合 <code>visited</code> 进行修改。</p>
+<p>总而言之，<strong>Kotlin 中的内层函数可以访问到外层函数的局部变量，并且可以跨越多层嵌套访问。</strong></p>
+<h3 id="函数的返回"><a href="#函数的返回" class="headerlink" title="函数的返回"></a>函数的返回</h3><p>Kotlin 使用 <code>return</code> 语句来从函数返回。返回值可以留空，空的返回值具有类型 <code>Unit</code>。在嵌套场景下，使用 <code>return</code> 语句的作用是 “returns from the nearest enclosing function or anonymous function”. 简而言之，它会从离它最近的使用 <code>fun</code> 定义的函数返回。</p>
+<p>对于 lambda 表达式而言，情况则稍有不同。Kotlin 编译器会尝试推断 lambda 表达式的函数体是否不返回值，也就是返回值类型为 <code>Unit</code>，如果不是，那么函数体中的最后一个表达式会被自动返回。请看下面这两个 lambda 表达式：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> func1: () -&gt; <span class="hljs-built_in">Unit</span> = &#123;<br>        println(<span class="hljs-string">&quot;This function returns nothing?&quot;</span>)<br>    &#125;<br>    <span class="hljs-keyword">val</span> func2: () -&gt; <span class="hljs-built_in">Int</span> = &#123;<br>        println(<span class="hljs-string">&quot;This function return 3&quot;</span>)<br>        <span class="hljs-number">1</span> + <span class="hljs-number">2</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意到，<code>func1</code> 和 <code>func2</code> 都不接受参数，<code>func1</code> 不返回值，而 <code>func2</code> 将返回整数。</p>
+<p>继续使用例子 <code>containsEven()</code>，我们在 <code>.any()</code> 中的 lambda 表达式添加一行打印语句：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">containsEven</span><span class="hljs-params">(collection: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">Int</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> =  <br>        collection.any &#123; num -&gt;<br>            <span class="hljs-keyword">val</span> condition = ((num % <span class="hljs-number">2</span>) == <span class="hljs-number">0</span>)<br>            println(<span class="hljs-string">&quot;Number <span class="hljs-variable">$num</span> : <span class="hljs-variable">$condition</span>&quot;</span>)<br>            condition<br>        &#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里，lambda 表达式的最后一行 <code>condition</code> 会被返回。请注意，这里你不能用 <code>return condition</code> 从 lambda 表达式返回。因为，在 lambda 表达式里使用 <code>return</code> 会跳出 <code>containsEven()</code> 函数，这与预期的功能不符，虽然不会引起编译报错。</p>
+<p>与 lambda 表达式不同的是，匿名函数可以正常使用 <code>return</code> 语句。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">containsEven</span><span class="hljs-params">(collection: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">Int</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>    <span class="hljs-keyword">val</span> isEven = <span class="hljs-function"><span class="hljs-title">fun</span><span class="hljs-params">(num: <span class="hljs-type">Int</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        println(num)<br>        <span class="hljs-keyword">return</span> (num % <span class="hljs-number">2</span>) == <span class="hljs-number">0</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> collection.any(isEven)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果希望从 lambda 表达式<strong>显式返回</strong>，我们需要特殊的语法 “return to labels”，以下是一个使用 lambda 表达式的例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">containsEven</span><span class="hljs-params">(collection: <span class="hljs-type">Collection</span>&lt;<span class="hljs-type">Int</span>&gt;)</span></span>: <span class="hljs-built_in">Boolean</span> =  <br>    collection.any &#123; num -&gt;  <br>        <span class="hljs-keyword">val</span> condition = ((num % <span class="hljs-number">2</span>) == <span class="hljs-number">0</span>)  <br>        println(<span class="hljs-string">&quot;Number <span class="hljs-variable">$num</span> : <span class="hljs-variable">$condition</span>&quot;</span>)  <br>        <span class="hljs-keyword">return</span><span class="hljs-symbol">@any</span> condition  <br>    &#125;<br></code></pre></td></tr></table></figure>
+<h3 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h3><p><strong>高阶函数</strong> (high-order functions) 是将函数作为参数，或将函数作为返回值的函数。</p>
+<p>Kotlin 标准库提供了众多高阶函数，它们能简化代码，提升可读性和可维护性。</p>
+<p>假设你有一个可迭代的容器，里面有很多对象，你希望根据一系列逻辑筛选出符合条件的对象。你可能会写出这样的代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> results = ArrayList&lt;Item&gt;()  <br><span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> items) &#123;  <br>    <span class="hljs-keyword">val</span> condition: <span class="hljs-built_in">Boolean</span><br>    <span class="hljs-comment">// 进行一些操作来检查条件</span><br>    <span class="hljs-keyword">if</span> (condition) results.add(item)  <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用标准库里的 <code>filter</code> 函数可以简化这样的代码。<code>filter</code> 函数接受一个函数作为参数，并返回一个列表，只包含判断为 true 的函数。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> results = items.filter &#123;<br>	<span class="hljs-comment">// 使用 it 进行一些操作来检查条件</span><br>	condition<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如上述代码所示，要使用 <code>filter</code> 函数，可以使用花括号快速创建一个 lambda 表达式。在函数体中，<code>it</code> 将指代 lambda 表达式的唯一参数，并且最后一行将作为返回值返回。</p>
+<p>除此之外，Kotlin 还有许多高阶函数，包括 <code>map</code>, <code>filter</code>, <code>reduce</code>, <code>fold</code>, <code>forEach</code>, <code>sortedBy</code> 等等。配合简洁的 lambda 表达式语法，它们能够简化各类对可迭代对象的操作。</p>
+<h3 id="作用域函数"><a href="#作用域函数" class="headerlink" title="作用域函数"></a>作用域函数</h3><p>作用域函数 (scope functions) 是 Kotlin 提供的一组特殊的高阶函数，你可以在任意对象上调用作用域函数，就像调用成员函数一样。</p>
+<blockquote>
+<p>Kotlin 标准库提供了一些函数，它们用来围绕一个对象执行一段代码块。当你在对象上调用这样的函数，并提供了一个 lambda 表达式时，它形成一个临时作用域。在此作用域中，你可以在不使用对象名称的情况下访问该对象。此类函数称为作用域函数 (scope functions)。共有五个作用域函数：let、run、with、apply 和 also。</p>
+</blockquote>
+<p>上面这段话是 Kotlin 官方对 scope function 的介绍（从英文翻译），是不是很迷糊？我们来看一个例子，该例子使用 <code>StringBuilder</code> 来根据一些数据创建一个字符串。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> builder = StringBuilder()<br>    <span class="hljs-comment">// 从 1 到 10 的字符串</span><br>    builder.append(<span class="hljs-string">&quot;Numbers: &quot;</span>)<br>    <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1.</span><span class="hljs-number">.10</span>) &#123;<br>        builder.append(<span class="hljs-string">&quot;<span class="hljs-variable">$i</span> &quot;</span>)<br>    &#125;<br>    <span class="hljs-keyword">val</span> resultString = builder.toString()<br>    println(resultString)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个 <code>for</code> 循环可能代表实际代码里的数据处理。在这段代码中，局部变量名称 <code>builder</code> 被重复了很多次，这很繁琐且不美观。我们可以使用函数式编程来改进这段代码的实现。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span> &#123;<br>    StringBuilder().apply &#123;<br>        append(<span class="hljs-string">&quot;Numbers: &quot;</span>)<br>        <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1.</span><span class="hljs-number">.10</span>) &#123; <br>            append(<span class="hljs-string">&quot;<span class="hljs-variable">$i</span> &quot;</span>) <br>        &#125; <br>    &#125;.toString().let &#123;<br>        println(it)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们在这个 <code>StringBuilder</code> 对象上调用了作用域函数 <code>apply</code>，它接收一个 lambda 表达式。在 lambda 表达式中，我们可以使用 <code>this</code> 来指代原对象，更可以省略 <code>this</code>。我们在结果字符串上继续调用作用域函数 <code>let</code>，并在随后的 lambda 表达式中用参数 <code>it</code> 指代字符串对象。于是，我们就避免了局部变量 <code>builder</code> 和 <code>resultString</code>，从而使代码更加简洁。</p>
+<p>作用域函数的实现方式也非常简单，比如下面这个函数就实现了类似于标准库 <code>apply()</code> 的功能。它用到了 generic function 和 function with receiver 语法，这样允许我们在任何对象上调用它。它接受的参数也是一个 function with receiver，这样就允许我们在 lambda 表达式里使用 <code>this</code> 来指代原对象。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//                 这里是输入函数的类型</span><br><span class="hljs-comment">//                   ↓ ↓ ↓ ↓ ↓ ↓</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T&gt;</span> T.<span class="hljs-title">myApply</span><span class="hljs-params">(f: <span class="hljs-type">T</span>.() -&gt; <span class="hljs-type">Unit</span>)</span></span>: T &#123;<br>    <span class="hljs-keyword">this</span>.f()<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>最为相像的四个作用域函数是 <code>let</code>, <code>run</code>, <code>apply</code>, 和 <code>also</code>. 作为扩展函数，它们可以在任意对象上调用，区分它们的要点是：</p>
+<ol>
+<li>是否需要返回对象本身？是否需要返回其他任意值？<code>let</code> 和 <code>run</code> 函数会返回 lambda 表达式的结果，而 <code>apply</code> 和 <code>also</code> 会返回对象本身。</li>
+<li>使用什么引用对象？<code>let</code> 和 <code>also</code> 创造的作用域里使用 <code>it</code> 指代对象，而 <code>apply</code> 和 <code>run</code> 创造的作用域里使用 <code>this</code> 指代对象。</li>
+</ol>
+<p>最后，<code>with</code> 不是一个扩展函数，你需要将对象作为参数传递给它。</p>
+<p>作用域函数的对比表格如下。</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Object reference</th>
+<th>Return value</th>
+<th>Is extension function</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/let.html"><code>let</code></a></td>
+<td><code>it</code></td>
+<td>Lambda result</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run.html"><code>run</code></a></td>
+<td><code>this</code></td>
+<td>Lambda result</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/apply.html"><code>apply</code></a></td>
+<td><code>this</code></td>
+<td>Context object</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/also.html"><code>also</code></a></td>
+<td><code>it</code></td>
+<td>Context object</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run.html"><code>run</code></a></td>
+<td>-</td>
+<td>Lambda result</td>
+<td>No: called without the context object</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/with.html"><code>with</code></a></td>
+<td><code>this</code></td>
+<td>Lambda result</td>
+<td>No: takes the context object as an argument</td>
+</tr>
+</tbody></table>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kotlin/" class="print-no-link">#kotlin</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>初识 Kotlin 函数式编程</div>
+      <div>https://habaneraa.github.io/2024/03/24/intro to kotlin functional programming/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>habaneraa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/21/nbunch%20in%20networkx/" title="Networkx 中一个引起歧义的参数">
+                        <span class="hidden-mobile">Networkx 中一个引起歧义的参数</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       Powered by <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> & <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
