@@ -228,7 +228,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          915 字
+          1.2k 字
         
       </span>
     
@@ -343,7 +343,28 @@
 <li>Shell 初始化请查阅 <a target="_blank" rel="noopener" href="https://starship.rs/guide/#step-2-set-up-your-shell-to-use-starship">官方文档</a></li>
 <li>配置文件默认位于 <code>~/.config/starship.toml</code>，配置请查阅 <a target="_blank" rel="noopener" href="https://starship.rs/zh-CN/config/">官方文档</a></li>
 </ul>
+<h2 id="远程主机-SSH-配置"><a href="#远程主机-SSH-配置" class="headerlink" title="远程主机 SSH 配置"></a>远程主机 SSH 配置</h2><p>有了 Windows Terminal，我们也不需要额外的 SSH 客户端程序了。配置新的 SSH 连接非常方便：</p>
+<ol>
+<li>确认 OpenSSH 安装，如果没有就直接 <code>scoop install openssh</code></li>
+<li>确认密钥对，如果没有，使用命令 <code>ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;</code> 生成新的</li>
+<li>将公钥 (文件以 <code>.pub</code> 结尾) 上传至远程主机，可以使用命令 <code>ssh-copy-id -i ~/.ssh/id_ed25519.pub user@123.1.2.3</code></li>
+<li>修改文件 <code>~/.ssh/config</code> 添加新主机信息</li>
+<li>打开 Windows Terminal 添加新的 profile，复制原 PowerShell 配置后将 “命令行” 改为</li>
+</ol>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">%SystemRoot%\System32\WindowsPowerShell\v1.<span class="hljs-number">0</span>\powershell.exe <span class="hljs-literal">-Command</span> <span class="hljs-string">&quot;ssh serverxyz&quot;</span><br></code></pre></td></tr></table></figure>
 
+<p>这里的 <code>hostname</code> 就是你在 config 里填入的主机名称。配置文件可以参考这个模版：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs test">Host serverxyz<br>  HostName 123.45.67.89<br>  User user<br>  Port 22<br>  IdentityFile ~/.ssh/id_ed25519<br></code></pre></td></tr></table></figure>
+
+<p>以上步骤完成后，就可以在 Windows Terminal 中一键连接远程主机了。</p>
+<p>如果不想每次登录都手动输入 passphrase，可以按以下步骤操作：</p>
+<p>首先确认 ssh-agent 开启：&#96;</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">Get-Service</span> ssh<span class="hljs-literal">-agent</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">Get-Service</span> <span class="hljs-literal">-Name</span> ssh<span class="hljs-literal">-agent</span> | <span class="hljs-built_in">Set-Service</span> <span class="hljs-literal">-StartupType</span> Automatic<br></code></pre></td></tr></table></figure>
+
+<p>然后执行命令将私钥交给它托管：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">ssh<span class="hljs-literal">-add</span> ~\.ssh\id_ed25519<br></code></pre></td></tr></table></figure>
                 
               </div>
             
