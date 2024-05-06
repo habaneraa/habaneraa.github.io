@@ -16,26 +16,21 @@
   <meta name="author" content="habaneraa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本文简单记录一下我在新的 Windows 机器上配置高颜值终端的方法。我们可能会在多台 PC 上切换工作，并希望使用的工具保持一致，这其中 “配终端” 就是一个很可能会 “浪费时间” 的过程。我们的主要原则包括：  使用主流方案和工具，减少问题出现概率 命令行优先，加快效率 尽可能美观、可读性佳，同时不要折腾   使用到的软件：  包安装 &amp; 管理: Scoop 终端模拟器 (termin">
+    <meta name="description" content="本文背景使用老旧的 GPU 机器，散热能力下降，影响性能甚至出现过热现象。现象包括：  通过 nvidia-smi 命令查看 GPU 温度，发现空载时温度显著高于环境温度（例如 40 度） 运行比较计算密集的任务时，由于散热较差，GPU 温度压不到合理区间（例如超过 85 度） GPU 过热后会触发硬件保护强行切换电源，进程退出且不能再使用 GPU  过热后可能会出现如下报错： 1Unable t">
 <meta property="og:type" content="article">
-<meta property="og:title" content="光速配置高颜值终端（Windows 机）">
-<meta property="og:url" content="https://habaneraa.github.io/2024/04/08/beautiful%20terminal%20on%20windows/index.html">
+<meta property="og:title" content="应对 GPU 服务器的过热问题">
+<meta property="og:url" content="https://habaneraa.github.io/2024/05/06/gpu-monitoring-management/index.html">
 <meta property="og:site_name" content="博客">
-<meta property="og:description" content="本文简单记录一下我在新的 Windows 机器上配置高颜值终端的方法。我们可能会在多台 PC 上切换工作，并希望使用的工具保持一致，这其中 “配终端” 就是一个很可能会 “浪费时间” 的过程。我们的主要原则包括：  使用主流方案和工具，减少问题出现概率 命令行优先，加快效率 尽可能美观、可读性佳，同时不要折腾   使用到的软件：  包安装 &amp; 管理: Scoop 终端模拟器 (termin">
+<meta property="og:description" content="本文背景使用老旧的 GPU 机器，散热能力下降，影响性能甚至出现过热现象。现象包括：  通过 nvidia-smi 命令查看 GPU 温度，发现空载时温度显著高于环境温度（例如 40 度） 运行比较计算密集的任务时，由于散热较差，GPU 温度压不到合理区间（例如超过 85 度） GPU 过热后会触发硬件保护强行切换电源，进程退出且不能再使用 GPU  过热后可能会出现如下报错： 1Unable t">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://habaneraa.github.io/attachments/terminal-demo.png">
-<meta property="article:published_time" content="2024-04-08T04:41:24.000Z">
-<meta property="article:modified_time" content="2024-04-08T04:41:24.000Z">
+<meta property="article:published_time" content="2024-05-06T08:45:50.000Z">
+<meta property="article:modified_time" content="2024-05-06T08:45:50.000Z">
 <meta property="article:author" content="habaneraa">
-<meta property="article:tag" content="terminal">
-<meta property="article:tag" content="windows">
-<meta property="article:tag" content="scoop">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://habaneraa.github.io/attachments/terminal-demo.png">
   
   
   
-  <title>光速配置高颜值终端（Windows 机） - 博客</title>
+  <title>应对 GPU 服务器的过热问题 - 博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -205,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">光速配置高颜值终端（Windows 机）</span>
+            <span id="subtitle">应对 GPU 服务器的过热问题</span>
           
         </div>
 
@@ -216,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-04-08 12:41" pubdate>
-          2024年4月8日 下午
+        <time datetime="2024-05-06 16:45" pubdate>
+          2024年5月6日 下午
         </time>
       </span>
     
@@ -228,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          691 字
         
       </span>
     
@@ -267,104 +262,44 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">光速配置高颜值终端（Windows 机）</h1>
+            <h1 id="seo-header">应对 GPU 服务器的过热问题</h1>
             
             
               <div class="markdown-body">
                 
-                <p>本文简单记录一下我在新的 Windows 机器上配置高颜值终端的方法。我们可能会在多台 PC 上切换工作，并希望使用的工具保持一致，这其中 “配终端” 就是一个很可能会 “浪费时间” 的过程。我们的主要原则包括：</p>
-<ul>
-<li>使用主流方案和工具，减少问题出现概率</li>
-<li>命令行优先，加快效率</li>
-<li>尽可能美观、可读性佳，同时不要折腾</li>
-</ul>
-<p><img src="/attachments/terminal-demo.png" srcset="/img/loading.gif" lazyload></p>
-<p>使用到的软件：</p>
-<ul>
-<li>包安装 &amp; 管理: <a target="_blank" rel="noopener" href="https://github.com/ScoopInstaller/Scoop">Scoop</a></li>
-<li>终端模拟器 (terminal emulator): <a target="_blank" rel="noopener" href="https://github.com/microsoft/terminal">Windows Terminal</a></li>
-<li>终端字体: <a target="_blank" rel="noopener" href="https://www.nerdfonts.com/font-downloads">Cascadia Code Nerd Font</a></li>
-<li>Shell prompt: <a target="_blank" rel="noopener" href="https://github.com/starship/starship">Starship.rs</a></li>
-</ul>
-<p>接下来我将一一介绍，并在文中附上快速上手的命令。</p>
-<p>注：本文<strong>不涉及 Shell 配置</strong>，这些终端配置可适用于任意 Shell (Powershell, Bash, Zsh, …)。</p>
-<h2 id="包管理工具"><a href="#包管理工具" class="headerlink" title="包管理工具"></a>包管理工具</h2><p>我为什么使用 Scoop？</p>
-<ul>
-<li>GUI 安装方式<strong>太蠢了</strong>：点浏览器，搜索引擎，找到下载链接，点安装程序，点点点……</li>
-<li>Scoop 是纯命令行操作，而且直观易懂，没有记忆负担</li>
-<li>Scoop 能自动管理各类软件的<strong>安装</strong>、<strong>更新</strong>和<strong>卸载</strong></li>
-<li>Scoop 在家目录下安装所有软件，并且免管理员权限</li>
-<li>不会往 PATH 里塞一大堆东西</li>
-<li>全开源</li>
-</ul>
-<p>Scoop 的缺点：</p>
-<ul>
-<li>对某些闭源 GUI 应用的支持有限，并不万能</li>
-<li>对网络环境要求较高，需要访问 GitHub 才能流畅使用</li>
-</ul>
-<p><strong>快速安装</strong> （使用 Powershell）</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">Set-ExecutionPolicy</span> <span class="hljs-literal">-ExecutionPolicy</span> RemoteSigned <span class="hljs-literal">-Scope</span> CurrentUser<br><span class="hljs-built_in">Invoke-RestMethod</span> <span class="hljs-literal">-Uri</span> https://get.scoop.sh | <span class="hljs-built_in">Invoke-Expression</span><br></code></pre></td></tr></table></figure>
-
-<p>自定义安装请参阅 <a target="_blank" rel="noopener" href="https://github.com/ScoopInstaller/Install?tab=readme-ov-file#advanced-installation">该文档</a>.</p>
-<p>推荐使用方式：</p>
+                <h2 id="本文背景"><a href="#本文背景" class="headerlink" title="本文背景"></a>本文背景</h2><p>使用老旧的 GPU 机器，散热能力下降，影响性能甚至出现过热现象。现象包括：</p>
 <ol>
-<li>拿到 scoop 第一件事是安装 git: <code>scoop install git</code>，告别 git bash</li>
-<li>添加软件仓库 (buckets)，例如 <code>scoop bucket add extras</code>，该官方仓库收录了许多非命令行软件</li>
-<li>安装下载工具 <code>scoop install aria2</code></li>
-<li>仓库更新和下载问题，裸奔非常容易卡死，开代理一般可以解决</li>
-<li>其他推荐安装：<code>7zip aria2 openssh python</code></li>
+<li>通过 <code>nvidia-smi</code> 命令查看 GPU 温度，发现空载时温度显著高于环境温度（例如 40 度）</li>
+<li>运行比较计算密集的任务时，由于散热较差，GPU 温度压不到合理区间（例如超过 85 度）</li>
+<li>GPU 过热后会触发硬件保护强行切换电源，进程退出且不能再使用 GPU</li>
 </ol>
-<p>本文以下所有工具都可以使用 <code>scoop install</code> 直接安装。</p>
-<h2 id="终端模拟器"><a href="#终端模拟器" class="headerlink" title="终端模拟器"></a>终端模拟器</h2><p>我使用 Windows Terminal。历经五年打磨，微软的新一代终端工具已经在 GitHub 狂揽近十万星。对于 Windows 机器，我真的想不出什么理由能让其他终端工具完美替代 Windows Terminal。若有 Linux &#x2F; 跨平台需求另说。</p>
-<p><strong>快速安装</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">scoop bucket add extras<br>scoop install windows-terminal<br></code></pre></td></tr></table></figure>
+<p>过热后可能会出现如下报错：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">Unable to determine the device handle for 0000:02:00.0: Unknown Error<br></code></pre></td></tr></table></figure>
 
-<h2 id="终端字体"><a href="#终端字体" class="headerlink" title="终端字体"></a>终端字体</h2><p>我使用 Cascadia Code 在 Nerd Fonts 中的版本。可前往 <a target="_blank" rel="noopener" href="https://www.nerdfonts.com/font-downloads">Nerd Fonts</a> 选择其他字体。</p>
-<p>为什么使用 Nerd Fonts？因为提供了更多的图标和字形，在终端中有更丰富的视觉体验。</p>
-<p><strong>快速安装</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">scoop bucket add nerd-fonts<br>scoop install CascadiaCode-NF-Mono<br></code></pre></td></tr></table></figure>
+<p>这里的序号是总线标识符，和 <code>nvidia-smi</code> 命令中查到的 GPU 是对应的，从这里可以得知是哪张 GPU 过热掉电。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>临时解决方式：过热掉电后，等温度降下来后重启机器即可恢复。</p>
+<p>妥协方案：调整 GPU 电源模式。</p>
+<p>首先，在 root 权限下执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">nvidia-smi -pm 1<br></code></pre></td></tr></table></figure>
 
-<p>在 Windows Terminal 中修改配置 (设置 → 配置文件 → 默认值 → 外观)，即可更换终端字体</p>
-<h2 id="Shell-Prompt"><a href="#Shell-Prompt" class="headerlink" title="Shell Prompt"></a>Shell Prompt</h2><p>Starship 是一款轻量、迅速、客制化的 cross-shell prompt。</p>
-<p>Shell prompt 指的是 CLI 环境中显示的提示信息，比如 Linux 中经典的 sh，它只会显示一个 <code>$</code> 符号，提供的信息非常有限。诸如 Bash，Powershell 等现代 Shell 则通常会显示当前所在的路径，这样就省去了频繁的 <code>pwd</code> 操作。Starship 作为一款 prompt 工具，它可以提供关于当前环境的丰富信息，包括但不限于：命令执行是否成功，命令执行时长，git 仓库信息，开发环境版本等等。此外，starship 还是 “cross-shell” 的，它支持几乎所有 shell，提供了统一的终端体验。</p>
-<p>优点：</p>
-<ul>
-<li>提升可读性</li>
-<li>节省部分操作</li>
-</ul>
-<p>缺点：</p>
-<ul>
-<li>某些情况下，它会自行执行查看当前环境信息，可能会拖慢速度（该工具使用 Rust 开发，可以说在性能方面已经很尽力了）</li>
-</ul>
-<p><strong>快速安装</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">scoop install starship<br></code></pre></td></tr></table></figure>
+<p>这将开启 GPU 的 “persistence mode”。然后执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">nvidia-smi -pl 100<br></code></pre></td></tr></table></figure>
 
-<ul>
-<li>Shell 初始化请查阅 <a target="_blank" rel="noopener" href="https://starship.rs/guide/#step-2-set-up-your-shell-to-use-starship">官方文档</a></li>
-<li>配置文件默认位于 <code>~/.config/starship.toml</code>，配置请查阅 <a target="_blank" rel="noopener" href="https://starship.rs/zh-CN/config/">官方文档</a></li>
-</ul>
-<h2 id="远程主机-SSH-配置"><a href="#远程主机-SSH-配置" class="headerlink" title="远程主机 SSH 配置"></a>远程主机 SSH 配置</h2><p>有了 Windows Terminal，我们也不需要额外的 SSH 客户端程序了。配置新的 SSH 连接非常方便：</p>
-<ol>
-<li>确认 OpenSSH 安装，如果没有就直接 <code>scoop install openssh</code></li>
-<li>确认密钥对，如果没有，使用命令 <code>ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;</code> 生成新的</li>
-<li>将公钥 (文件以 <code>.pub</code> 结尾) 上传至远程主机，可以使用命令 <code>ssh-copy-id -i ~/.ssh/id_ed25519.pub user@123.1.2.3</code></li>
-<li>修改文件 <code>~/.ssh/config</code> 添加新主机信息</li>
-<li>打开 Windows Terminal 添加新的 profile，复制原 PowerShell 配置后将 “命令行” 改为</li>
-</ol>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">%SystemRoot%\System32\WindowsPowerShell\v1.<span class="hljs-number">0</span>\powershell.exe <span class="hljs-literal">-Command</span> <span class="hljs-string">&quot;ssh serverxyz&quot;</span><br></code></pre></td></tr></table></figure>
+<p>这将限制 GPU 的电源功率，从功耗上减少散热，以达到控制温度的目的。这里的 100 代表目标功率，可以随意调整，功率有特定范围，例如 RTX 3090 的功率范围是 100W 到 350W。如果输入了不合法的功率值，会有命令行提示。</p>
+<p>此外，如果多卡机器中不同 GPU 的散热条件不一样，可以通过如下命令单独修改一张卡的功率上限。这在特定卡散热不佳且仍然希望使用多卡训练时很有用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">nvidia-smi -pl 100 -i 0<br></code></pre></td></tr></table></figure>
 
-<p>这里的 <code>hostname</code> 就是你在 config 里填入的主机名称。配置文件可以参考这个模版：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs test">Host serverxyz<br>  HostName 123.45.67.89<br>  User user<br>  Port 22<br>  IdentityFile ~/.ssh/id_ed25519<br></code></pre></td></tr></table></figure>
+<p>最后，一劳永逸解决方式：花点 w 买新机器。</p>
+<h2 id="GPU-状态及进程监控"><a href="#GPU-状态及进程监控" class="headerlink" title="GPU 状态及进程监控"></a>GPU 状态及进程监控</h2><p>众所周知，<code>nvidia-smi</code> 用于查看 GPU 运行信息，但是它并不美观，而且不能动态更新内容，如果想持续监测 GPU 状态，需要反复执行该命令。因此，我简单列举两个小工具，可以在一定程度上替代 <code>nvidia-smi</code> 。他们均基于 Python，因此推荐使用 pipx 安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">apt install pipx<br>pipx ensurepath<br>pipx install gpustat<br>pipx install nvitop<br></code></pre></td></tr></table></figure>
 
-<p>以上步骤完成后，就可以在 Windows Terminal 中一键连接远程主机了。</p>
-<p>如果不想每次登录都手动输入 passphrase，可以按以下步骤操作：</p>
-<p>首先确认 ssh-agent 开启：&#96;</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">Get-Service</span> ssh<span class="hljs-literal">-agent</span><br></code></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://github.com/wookayin/gpustat">gpustat</a> 是一款轻量命令行工具，定位是 <code>nvidia-smi</code> 的替代品。在命令行直接运行 <code>gpustat</code> 即可输入简洁版的 GPU 状态信息，也可以使用 <code>gpustat --watch</code> 来自动监测。</p>
+<p><a target="_blank" rel="noopener" href="https://nvitop.readthedocs.io/en/latest/">nvitop</a> 是另一款命令行工具，提供类似于 htop 的终端 UI，功能比较强大。同样地，在命令行可使用 <code>nvitop</code> 启动它的 UI。它很适合在一段时间范围内监测 GPU 运行状态。</p>
+<h2 id="其他技巧"><a href="#其他技巧" class="headerlink" title="其他技巧"></a>其他技巧</h2><p>如果希望多卡进程只使用一张或几张卡，可以通过设置环境变量来让进程只使用你指定的 GPU。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDA_VISIBLE_DEVICES=0,1<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">Get-Service</span> <span class="hljs-literal">-Name</span> ssh<span class="hljs-literal">-agent</span> | <span class="hljs-built_in">Set-Service</span> <span class="hljs-literal">-StartupType</span> Automatic<br></code></pre></td></tr></table></figure>
+<p>这里的显卡号就是 <code>nvidia-smi</code> 命令最左侧显示的 GPU ID，可用逗号分隔多个。</p>
 
-<p>然后执行命令将私钥交给它托管：</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">ssh<span class="hljs-literal">-add</span> ~\.ssh\id_ed25519<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -372,17 +307,6 @@
             <div>
               <div class="post-metas my-3">
   
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/terminal/" class="print-no-link">#terminal</a>
-      
-        <a href="/tags/windows/" class="print-no-link">#windows</a>
-      
-        <a href="/tags/scoop/" class="print-no-link">#scoop</a>
-      
-    </div>
   
 </div>
 
@@ -392,8 +316,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>光速配置高颜值终端（Windows 机）</div>
-      <div>https://habaneraa.github.io/2024/04/08/beautiful terminal on windows/</div>
+      <div>应对 GPU 服务器的过热问题</div>
+      <div>https://habaneraa.github.io/2024/05/06/gpu-monitoring-management/</div>
     </div>
     <div class="license-meta">
       
@@ -405,7 +329,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年4月8日</div>
+          <div>2024年5月6日</div>
         </div>
       
       
@@ -437,18 +361,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/06/gpu-monitoring-management/" title="应对 GPU 服务器的过热问题">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">应对 GPU 服务器的过热问题</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/03/24/intro%20to%20kotlin%20functional%20programming/" title="初识 Kotlin 函数式编程">
-                        <span class="hidden-mobile">初识 Kotlin 函数式编程</span>
+                      <a href="/2024/04/08/beautiful%20terminal%20on%20windows/" title="光速配置高颜值终端（Windows 机）">
+                        <span class="hidden-mobile">光速配置高颜值终端（Windows 机）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
