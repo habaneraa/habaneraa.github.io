@@ -16,21 +16,24 @@
   <meta name="author" content="habaneraa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本文背景使用老旧的 GPU 机器，散热能力下降，影响性能甚至出现过热现象。现象包括：  通过 nvidia-smi 命令查看 GPU 温度，发现空载时温度显著高于环境温度（例如 40 度） 运行比较计算密集的任务时，由于散热较差，GPU 温度压不到合理区间（例如超过 85 度） GPU 过热后会触发硬件保护强行切换电源，进程退出且不能再使用 GPU  过热后可能会出现如下报错： 1Unable t">
+    <meta name="description" content="前言Python 是一门灵活、多用途的编程语言，几乎在所有场合都有用武之地。经过多年的发展，Python 语言拥有数量庞大的工具链，其“配环境”的过程经常让初学者感到头疼。本文从开发工具的基本概念入手，希望帮助大家无痛解决 Python 配环境问题。 在进行实操前，我们快速扫一下几个常见概念：  Python 解释器：负责解析源代码并执行相应功能的程序，一台机器上可能同时拥有多个解释器，它们可能对">
 <meta property="og:type" content="article">
-<meta property="og:title" content="应对 GPU 服务器的过热问题">
-<meta property="og:url" content="https://habaneraa.github.io/2024/05/06/gpu-monitoring-management/index.html">
+<meta property="og:title" content="无痛 Python 环境（Linux 机器）">
+<meta property="og:url" content="https://habaneraa.github.io/2024/05/29/painless-python-env/index.html">
 <meta property="og:site_name" content="博客">
-<meta property="og:description" content="本文背景使用老旧的 GPU 机器，散热能力下降，影响性能甚至出现过热现象。现象包括：  通过 nvidia-smi 命令查看 GPU 温度，发现空载时温度显著高于环境温度（例如 40 度） 运行比较计算密集的任务时，由于散热较差，GPU 温度压不到合理区间（例如超过 85 度） GPU 过热后会触发硬件保护强行切换电源，进程退出且不能再使用 GPU  过热后可能会出现如下报错： 1Unable t">
+<meta property="og:description" content="前言Python 是一门灵活、多用途的编程语言，几乎在所有场合都有用武之地。经过多年的发展，Python 语言拥有数量庞大的工具链，其“配环境”的过程经常让初学者感到头疼。本文从开发工具的基本概念入手，希望帮助大家无痛解决 Python 配环境问题。 在进行实操前，我们快速扫一下几个常见概念：  Python 解释器：负责解析源代码并执行相应功能的程序，一台机器上可能同时拥有多个解释器，它们可能对">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-05-06T08:45:50.000Z">
-<meta property="article:modified_time" content="2024-05-06T08:45:50.000Z">
+<meta property="og:image" content="https://habaneraa.github.io/attachments/py-tools-category.png">
+<meta property="article:published_time" content="2024-05-29T05:08:43.000Z">
+<meta property="article:modified_time" content="2024-05-29T05:08:43.000Z">
 <meta property="article:author" content="habaneraa">
+<meta property="article:tag" content="#python">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://habaneraa.github.io/attachments/py-tools-category.png">
   
   
   
-  <title>应对 GPU 服务器的过热问题 - 博客</title>
+  <title>无痛 Python 环境（Linux 机器） - 博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +203,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">应对 GPU 服务器的过热问题</span>
+            <span id="subtitle">无痛 Python 环境（Linux 机器）</span>
           
         </div>
 
@@ -211,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-06 16:45" pubdate>
-          2024年5月6日 下午
+        <time datetime="2024-05-29 13:08" pubdate>
+          2024年5月29日 下午
         </time>
       </span>
     
@@ -223,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          691 字
+          1.6k 字
         
       </span>
     
@@ -262,43 +265,93 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">应对 GPU 服务器的过热问题</h1>
+            <h1 id="seo-header">无痛 Python 环境（Linux 机器）</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="本文背景"><a href="#本文背景" class="headerlink" title="本文背景"></a>本文背景</h2><p>使用老旧的 GPU 机器，散热能力下降，影响性能甚至出现过热现象。现象包括：</p>
-<ol>
-<li>通过 <code>nvidia-smi</code> 命令查看 GPU 温度，发现空载时温度显著高于环境温度（例如 40 度）</li>
-<li>运行比较计算密集的任务时，由于散热较差，GPU 温度压不到合理区间（例如超过 85 度）</li>
-<li>GPU 过热后会触发硬件保护强行切换电源，进程退出且不能再使用 GPU</li>
-</ol>
-<p>过热后可能会出现如下报错：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">Unable to determine the device handle for 0000:02:00.0: Unknown Error<br></code></pre></td></tr></table></figure>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Python 是一门灵活、多用途的编程语言，几乎在所有场合都有用武之地。经过多年的发展，Python 语言拥有数量庞大的工具链，其“配环境”的过程经常让初学者感到头疼。本文从开发工具的基本概念入手，希望帮助大家无痛解决 Python 配环境问题。</p>
+<p>在进行实操前，我们快速扫一下几个常见概念：</p>
+<ul>
+<li>Python 解释器：负责解析源代码并执行相应功能的程序，一台机器上可能同时拥有多个解释器，它们可能对应不同的版本和依赖库</li>
+<li>Python 版本：Python 编程语言本身的版本。一般来说，Python3 的新版本可以兼容所有 Python3 老版本代码，而较老的解释器可能无法执行某些新特性。如果没有特殊需求，建议使用最新的 Python 3.12，尽量不要使用过老版本，甚至是 Python2</li>
+<li>Python 包和虚拟环境：要想在代码中使用第三方包，就需要在当前环境中安装包。第三方包之间会有复杂的版本依赖。为了在不同项目中隔离依赖，虚拟环境允许你创建一个完全独立的 Python 解释器，这是非常有用的。</li>
+</ul>
+<p>你可能听说过很多和虚拟环境相关的 Python 开发工具，比如 pip, conda, pipenv, poetry 等，它们可能会提供以下功能：</p>
+<ul>
+<li>Python 版本管理：允许你安装多个 Python 版本并切换</li>
+<li>Python 包管理：负责下载、安装、卸载第三方包，并妥善处理它们之间的依赖关系</li>
+<li>虚拟环境管理：创建相互独立的虚拟环境</li>
+<li>项目打包：构建、发布你开发的 Python 包</li>
+</ul>
+<p><img src="/attachments/py-tools-category.png" srcset="/img/loading.gif" lazyload></p>
+<p>上图来自 <a target="_blank" rel="noopener" href="https://alpopkes.com/posts/python/packaging_tools/#categorization">这篇博客</a> ，它展示了许多工具的功能范畴。例如常见的 conda 实际上同时提供了版本管理、包管理、虚拟环境管理等功能。</p>
+<p>哪个工具最好？我该如何选择？—— 没有最好的工具，只有符合需求的工具才是最好的。Python 语言有非常多的用途，每种用途都可能有不一样的需要：</p>
+<ul>
+<li><strong>数据分析&#x2F;可视化</strong> 通常需要 notebook 环境，并且依赖的第三方包相对固定</li>
+<li><strong>深度学习研究</strong> 可能会涉及许多不成熟的第三方依赖，使用虚拟环境较为频繁</li>
+<li><strong>工作自动化</strong> 编写脚本、一次性执行，不过分强调依赖隔离，只需要一定数量的第三方包</li>
+<li><strong>Web 开发</strong> 通常需要较为严格的依赖管理和项目打包</li>
+</ul>
+<p>本文推荐使用 conda 和 poetry 这两个主流工具。以 Linux 机器为例进行演示，默认读者有基本的 Linux 知识。</p>
+<h3 id="安装-conda"><a href="#安装-conda" class="headerlink" title="安装 conda"></a>安装 conda</h3><p>conda 的优势：</p>
+<ul>
+<li>能够支持 Python 语言以外的依赖，相比于 Python 专用的 pip 更强大</li>
+<li>能很好地和 pip 同时使用</li>
+<li>同时提供 Python 版本管理和虚拟环境管理</li>
+</ul>
+<p>conda 的劣势：</p>
+<ul>
+<li>依赖解析可能比较慢，依赖管理相对宽松</li>
+<li>不支持 <code>pyproject.toml</code> 相关功能，不提供打包功能</li>
+</ul>
+<p>除非你希望你的 Python 能开箱即用（Anaconda 极为臃肿），否则一律推荐 miniconda。其安装方法如下：</p>
+<p>第一步，下载 miniconda3 安装文件，此处使用清华镜像站，下载速度更快</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh<br></code></pre></td></tr></table></figure>
 
-<p>这里的序号是总线标识符，和 <code>nvidia-smi</code> 命令中查到的 GPU 是对应的，从这里可以得知是哪张 GPU 过热掉电。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>临时解决方式：过热掉电后，等温度降下来后重启机器即可恢复。</p>
-<p>妥协方案：调整 GPU 电源模式。</p>
-<p>首先，在 root 权限下执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">nvidia-smi -pm 1<br></code></pre></td></tr></table></figure>
+<p>第二步，使用 <code>bash miniconda.sh</code> 执行安装程序，请根据命令行指引，逐步安装。我们假设安装路径为 <code>~/miniconda3</code>。安装完成后该文件就没用了，可以直接使用 <code>rm miniconda3</code> 删除。</p>
+<p>第三步，将 conda 绑定到你的 shell，例如我使用 zsh，那么就执行以下命令。该命令的作用是添加一段脚本到 <code>~/.zshrc</code> 文件。然后重启 shell 即可生效。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">~/miniconda3/bin/conda init zsh<br></code></pre></td></tr></table></figure>
 
-<p>这将开启 GPU 的 “persistence mode”。然后执行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">nvidia-smi -pl 100<br></code></pre></td></tr></table></figure>
+<p>如果成功安装，重启 shell 后，你将会在 shell prompt 中看到 “(base)” 的标识，这代表你现在位于 conda 的 base 环境中。然后就可以创建虚拟环境了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda create -n myenv python=3.10<br></code></pre></td></tr></table></figure>
 
-<p>这将限制 GPU 的电源功率，从功耗上减少散热，以达到控制温度的目的。这里的 100 代表目标功率，可以随意调整，功率有特定范围，例如 RTX 3090 的功率范围是 100W 到 350W。如果输入了不合法的功率值，会有命令行提示。</p>
-<p>此外，如果多卡机器中不同 GPU 的散热条件不一样，可以通过如下命令单独修改一张卡的功率上限。这在特定卡散热不佳且仍然希望使用多卡训练时很有用。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">nvidia-smi -pl 100 -i 0<br></code></pre></td></tr></table></figure>
+<p>为了更快地下载包，我们可以使用清华镜像站：</p>
+<ul>
+<li>修改 <code>~/.condarc</code> 文件，参考 <a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/">清华镜像站指引</a> 添加相应内容</li>
+<li>对于 pip，也可以通过命令来指定 <code>pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</code></li>
+</ul>
+<p>其他注意事项：</p>
+<ul>
+<li>conda 本身不依赖系统的 Python，所以你无需安装其他任何 Python 就能直接使用 conda 环境。</li>
+<li>配合 IDE (如 VSCode) 使用时，请注意在左下角选择正确的 Python 解释器。</li>
+<li>安装依赖时，请确认已经使用 <code>conda activate &lt;env&gt;</code> 切换到正确的虚拟环境。</li>
+<li>conda 很容易“重开”，如果环境没配好，直接删了重新创建虚拟环境就可以了。conda 自身的重装也很容易，直接删除整个安装目录即可，没有副作用。</li>
+</ul>
+<h3 id="安装-poetry"><a href="#安装-poetry" class="headerlink" title="安装 poetry"></a>安装 poetry</h3><p>poetry 的优势：</p>
+<ul>
+<li>专注 Python 项目，一个项目对应一个虚拟环境，并提供打包和发布功能，完整支持 <code>pyproject.toml</code></li>
+<li>依赖解析功能强大，一致性好</li>
+</ul>
+<p>poetry 的劣势：</p>
+<ul>
+<li>不能管理 Python 包以外的依赖</li>
+<li>不推荐复用项目环境</li>
+</ul>
+<p>推荐使用 pipx 来安装 poetry。这是因为 poetry 本身是一个基于 Python 语言的命令行工具，而 pipx 能够为每个应用创造独立的运行环境。要使用 pipx，首先需要以 root 身份安装，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install pipx<br></code></pre></td></tr></table></figure>
 
-<p>最后，一劳永逸解决方式：花点 w 买新机器。</p>
-<h2 id="GPU-状态及进程监控"><a href="#GPU-状态及进程监控" class="headerlink" title="GPU 状态及进程监控"></a>GPU 状态及进程监控</h2><p>众所周知，<code>nvidia-smi</code> 用于查看 GPU 运行信息，但是它并不美观，而且不能动态更新内容，如果想持续监测 GPU 状态，需要反复执行该命令。因此，我简单列举两个小工具，可以在一定程度上替代 <code>nvidia-smi</code> 。他们均基于 Python，因此推荐使用 pipx 安装。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">apt install pipx<br>pipx ensurepath<br>pipx install gpustat<br>pipx install nvitop<br></code></pre></td></tr></table></figure>
+<p>然后就可以以用户身份为自己单独安装应用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">pipx ensurepath<br>pipx install poetry<br></code></pre></td></tr></table></figure>
 
-<p><a target="_blank" rel="noopener" href="https://github.com/wookayin/gpustat">gpustat</a> 是一款轻量命令行工具，定位是 <code>nvidia-smi</code> 的替代品。在命令行直接运行 <code>gpustat</code> 即可输入简洁版的 GPU 状态信息，也可以使用 <code>gpustat --watch</code> 来自动监测。</p>
-<p><a target="_blank" rel="noopener" href="https://nvitop.readthedocs.io/en/latest/">nvitop</a> 是另一款命令行工具，提供类似于 htop 的终端 UI，功能比较强大。同样地，在命令行可使用 <code>nvitop</code> 启动它的 UI。它很适合在一段时间范围内监测 GPU 运行状态。</p>
-<h2 id="其他技巧"><a href="#其他技巧" class="headerlink" title="其他技巧"></a>其他技巧</h2><p>如果希望多卡进程只使用一张或几张卡，可以通过设置环境变量来让进程只使用你指定的 GPU。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> CUDA_VISIBLE_DEVICES=0,1<br></code></pre></td></tr></table></figure>
+<p>同样，poetry 也可以使用 pypi 清华镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">poetry <span class="hljs-built_in">source</span> add --priority=primary mirrors https://pypi.tuna.tsinghua.edu.cn/simple/<br></code></pre></td></tr></table></figure>
 
-<p>这里的显卡号就是 <code>nvidia-smi</code> 命令最左侧显示的 GPU ID，可用逗号分隔多个。</p>
+<p>其他注意事项：</p>
+<ul>
+<li>与 conda 的虚拟环境不同的是，poetry 的虚拟环境实际上与 <code>pyproject.toml</code> 绑定。所以在正常情况下，你并不能脱离一个 python 项目创建虚拟环境，并将该环境在多个目录中复用。</li>
+<li>poetry 本身以及 poetry 创建的虚拟环境都依赖外部的 Python。poetry 不提供 Python 版本的管理和切换，如有需要，可以考虑使用 pyenv 等工具。我们之所以推荐使用 pipx 安装 poetry，正是为了防止系统 Python 的依赖影响到 poetry 自身的运行。</li>
+</ul>
 
                 
               </div>
@@ -308,6 +361,13 @@
               <div class="post-metas my-3">
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">##python</a>
+      
+    </div>
+  
 </div>
 
 
@@ -316,8 +376,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>应对 GPU 服务器的过热问题</div>
-      <div>https://habaneraa.github.io/2024/05/06/gpu-monitoring-management/</div>
+      <div>无痛 Python 环境（Linux 机器）</div>
+      <div>https://habaneraa.github.io/2024/05/29/painless-python-env/</div>
     </div>
     <div class="license-meta">
       
@@ -329,7 +389,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月6日</div>
+          <div>2024年5月29日</div>
         </div>
       
       
@@ -361,18 +421,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/29/painless-python-env/" title="无痛 Python 环境（Linux 机器）">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">无痛 Python 环境（Linux 机器）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/04/08/beautiful%20terminal%20on%20windows/" title="光速配置高颜值终端（Windows 机）">
-                        <span class="hidden-mobile">光速配置高颜值终端（Windows 机）</span>
+                      <a href="/2024/05/06/gpu-monitoring-management/" title="应对 GPU 服务器的过热问题">
+                        <span class="hidden-mobile">应对 GPU 服务器的过热问题</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
